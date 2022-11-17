@@ -1,27 +1,41 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from Controller.auth_controller import *
+from Controller.student_controller import *
 
 app = FastAPI()
 
-class Msg(BaseModel):
-    msg: str
+class auth_data(BaseModel):
+    user: str
+    pswd: str
 
-
+# base route
 @app.get("/")
-async def root():
-    return {"message": "Hello World. Welcome to FastAPI!"}
+async def up_state():
+    return "server is up and running"
 
+@app.get("/login")
+async def login(body: auth_data):
+    access = await VerifyRequest(body.user, body.pswd)
+    return access
 
-@app.get("/path")
-async def demo_get():
-    return {"message": "This is /path endpoint, use a post request to transform the text to uppercase"}
+# get all students route
+@app.get("/get/students")
+async def get_students(body: auth_data):
+    access = await VerifyRequest(body.user, body.pswd)
+    if(access["status"] == 401):
+        return access
+    return await GetStudents()
 
+# add student route
+class student_request_body(BaseModel):
+    auth: auth_data
+    name: str = ""
+    grades: list = []
 
-@app.post("/path")
-async def demo_post(inp: Msg):
-    return {"message": inp.msg.upper()}
-
-
-@app.get("/path/{path_id}")
-async def demo_get_path_id(path_id: int):
-    return {"message": f"This is /path/{path_id} endpoint, use post request to retrieve result"}
+@app.post("/create/students")
+async def add_student(body: student_request_body):
+    access = await VerifyRequest(body.auth.user, body.auth.pswd)
+    if(access["status"] == 401):
+        return access
+    return await AddStudent(body.name, body.grades)
