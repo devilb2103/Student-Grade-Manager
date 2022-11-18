@@ -1,4 +1,3 @@
-from re import I
 from Models.student_model import *
 
 student_details = {1:student(name="Dev", grades=[100, 70, 40], average=70)}
