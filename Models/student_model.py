@@ -1,16 +1,5 @@
-from ctypes import Union
+from pydantic import BaseModel
 
-class student():
-    def __init__(self, name, grades):
-        self.name = name
-        # self.year = year
-        # self.branch = branch
-        self.grades = grades
-    
-    def __repr__(self) -> dict:
-        {
-            "name" : self.name,
-            # "year" : self.year,
-            # "branch" : self.branch,
-            "grades": self.grades
-        }
+class student(BaseModel):
+    name: str
+    grades: list
