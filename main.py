@@ -21,7 +21,7 @@ async def login(body: auth_data):
 
 # get all students route
 @app.get("/get/students")
-async def get_students(body: auth_data):
+async def get_students():
     return await GetStudents()
 
 # add student route
