@@ -14,7 +14,7 @@ class auth_data(BaseModel):
 async def up_state():
     return "server is up and running"
 
-@app.get("/login")
+@app.post("/login")
 async def login(body: auth_data):
     access = await VerifyRequest(body.user, body.pswd)
     return access
